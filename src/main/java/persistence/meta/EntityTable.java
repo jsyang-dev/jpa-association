@@ -7,6 +7,7 @@ import java.util.Objects;
 
 public class EntityTable {
     public static final String NOT_ENTITY_FAILED_MESSAGE = "클래스에 @Entity 애노테이션이 없습니다.";
+    private static final String ALIAS_PREFIX = "_";
 
     private final Class<?> type;
     private final TableName tableName;
@@ -48,28 +49,27 @@ public class EntityTable {
     }
 
     public String getWhereClause() {
-        final EntityColumn entityColumn = entityColumns.getIdEntityColumn();
-        return entityColumn.getColumnName() + " = " + entityColumn.getValueWithQuotes();
+        return getIdEntityColumn().getColumnName() + " = " + getIdEntityColumn().getValueWithQuotes();
     }
 
     public String getWhereClause(Object id) {
-        final EntityColumn entityColumn = entityColumns.getIdEntityColumn();
-        return entityColumn.getColumnName() + " = " + getValueWithQuotes(id);
+        return getIdEntityColumn().getColumnName() + " = " + getValueWithQuotes(id);
+    }
+
+    public String getIdColumnName() {
+        return getIdEntityColumn().getColumnName();
     }
 
     public Object getIdValue() {
-        final EntityColumn entityColumn = entityColumns.getIdEntityColumn();
-        return entityColumn.getValue();
+        return getIdEntityColumn().getValue();
     }
 
     public String getIdValueWithQuotes() {
-        final EntityColumn entityColumn = entityColumns.getIdEntityColumn();
-        return entityColumn.getValueWithQuotes();
+        return getIdEntityColumn().getValueWithQuotes();
     }
 
     public boolean isIdGenerationFromDatabase() {
-        final EntityColumn entityColumn = entityColumns.getIdEntityColumn();
-        return entityColumn.isIdGenerationFromDatabase();
+        return getIdEntityColumn().isIdGenerationFromDatabase();
     }
 
     public EntityKey toEntityKey() {
@@ -91,9 +91,37 @@ public class EntityTable {
         return getEntityColumns().get(index);
     }
 
+    public boolean isOneToManyAssociation() {
+        final EntityColumn joinEntityColumn = getJoinEntityColumn();
+        if (Objects.isNull(joinEntityColumn)) {
+            return false;
+        }
+        return joinEntityColumn.isOneToManyAssociation();
+    }
+
+    public Class<?> getJoinColumnType() {
+        return getJoinEntityColumn().getJoinColumnType();
+    }
+
+    public String getJoinColumnName() {
+        return getJoinEntityColumn().getColumnName();
+    }
+
+    public String getAlias() {
+        return ALIAS_PREFIX + getTableName();
+    }
+
     private void validate(Class<?> entityType) {
         if (!entityType.isAnnotationPresent(Entity.class)) {
             throw new IllegalArgumentException(NOT_ENTITY_FAILED_MESSAGE);
         }
+    }
+
+    private EntityColumn getIdEntityColumn() {
+        return entityColumns.getIdEntityColumn();
+    }
+
+    private EntityColumn getJoinEntityColumn() {
+        return entityColumns.getJoinEntityColumn();
     }
 }

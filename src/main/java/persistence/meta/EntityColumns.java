@@ -40,4 +40,11 @@ public class EntityColumns {
     private boolean isPersistent(Field field) {
         return !field.isAnnotationPresent(Transient.class);
     }
+
+    public EntityColumn getJoinEntityColumn() {
+        return entityColumns.stream()
+                .filter(EntityColumn::isOneToManyAssociation)
+                .findFirst()
+                .orElse(null);
+    }
 }

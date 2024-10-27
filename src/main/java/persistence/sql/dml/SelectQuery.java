@@ -3,35 +3,91 @@ package persistence.sql.dml;
 import persistence.meta.EntityColumn;
 import persistence.meta.EntityTable;
 
-import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class SelectQuery {
+    private static final String COLUMN_DELIMITER = ", ";
+    private static final String COLUMN_ALIAS_DELIMITER = ".";
+    private static final String TABLE_ALIAS_DELIMITER = " ";
+
     public String findAll(Class<?> entityType) {
         final EntityTable entityTable = new EntityTable(entityType);
+
+        if (entityTable.isOneToManyAssociation()) {
+            return getAssociationQuery(entityTable)
+                    .build();
+        }
         return findAll(entityTable)
                 .build();
     }
 
     public String findById(Class<?> entityType, Object id) {
         final EntityTable entityTable = new EntityTable(entityType);
+
+        if (entityTable.isOneToManyAssociation()) {
+            return getAssociationQuery(entityTable)
+                .where(getColumnWithAliasClause(entityTable, entityTable.getIdColumnName()), id)
+                    .build();
+        }
         return findAll(entityTable)
-                .where(entityTable.getWhereClause(id))
+                .where(entityTable.getIdColumnName(), id)
                 .build();
+    }
+
+    private SelectQueryBuilder getAssociationQuery(EntityTable entityTable) {
+        final EntityTable joinEntityTable = new EntityTable(entityTable.getJoinColumnType());
+        return new SelectQueryBuilder()
+                .select(getSelectClause(entityTable, joinEntityTable))
+                .from(getTableWithAliasClause(entityTable))
+                .innerJoin(getTableWithAliasClause(joinEntityTable))
+                .on(
+                        getColumnWithAliasClause(entityTable, entityTable.getJoinColumnName()),
+                        getColumnWithAliasClause(joinEntityTable, joinEntityTable.getIdColumnName())
+                );
     }
 
     private SelectQueryBuilder findAll(EntityTable entityTable) {
         return new SelectQueryBuilder()
-                .select(getColumnClause(entityTable))
+                .select(getSelectClause(entityTable))
                 .from(entityTable.getTableName());
     }
 
-    private String getColumnClause(EntityTable entityTable) {
-        final List<String> columnDefinitions = entityTable.getEntityColumns()
+    private String getSelectClause(EntityTable entityTable) {
+        return entityTable.getEntityColumns()
                 .stream()
                 .map(EntityColumn::getColumnName)
-                .collect(Collectors.toList());
+                .collect(Collectors.joining(COLUMN_DELIMITER));
+    }
 
-        return String.join(", ", columnDefinitions);
+    private String getSelectClause(EntityTable entityTable, EntityTable joinEntityTable) {
+        final Stream<String> columnDefinitions = entityTable.getEntityColumns()
+                .stream()
+                .filter(this::isNotNeeded)
+                .map(entityColumn -> getJoinColumnName(entityTable, entityColumn));
+
+        final Stream<String> joinColumnDefinitions = joinEntityTable.getEntityColumns()
+                .stream()
+                .filter(this::isNotNeeded)
+                .map(entityColumn -> getJoinColumnName(joinEntityTable, entityColumn));
+
+        return Stream.concat(columnDefinitions, joinColumnDefinitions)
+                .collect(Collectors.joining(COLUMN_DELIMITER));
+    }
+
+    private boolean isNotNeeded(EntityColumn entityColumn) {
+        return !entityColumn.isOneToManyAssociation();
+    }
+
+    private String getJoinColumnName(EntityTable entityTable, EntityColumn entityColumn) {
+        return entityTable.getAlias() + COLUMN_ALIAS_DELIMITER + entityColumn.getColumnName();
+    }
+
+    private String getTableWithAliasClause(EntityTable entityTable) {
+        return entityTable.getTableName() + TABLE_ALIAS_DELIMITER + entityTable.getAlias();
+    }
+
+    private String getColumnWithAliasClause(EntityTable entityTable, String columnName) {
+        return entityTable.getAlias() + COLUMN_ALIAS_DELIMITER + columnName;
     }
 }

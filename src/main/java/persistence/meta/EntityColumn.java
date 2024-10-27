@@ -79,4 +79,12 @@ public class EntityColumn {
     public boolean isIdGenerationFromDatabase() {
         return columnIdOption.isIdGenerationFromDatabase();
     }
+
+    public boolean isOneToManyAssociation() {
+        return columnOption.isOneToManyAssociation();
+    }
+
+    public Class<?> getJoinColumnType() {
+        return columnOption.getJoinColumnType();
+    }
 }

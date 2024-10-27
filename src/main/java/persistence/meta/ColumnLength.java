@@ -7,7 +7,8 @@ import java.util.List;
 import java.util.Objects;
 
 public class ColumnLength {
-    private static final int DEFAULT_LENGTH = 0;
+    private static final int MIN_LENGTH = 0;
+    private static final int MAX_LENGTH = 255;
 
     private final List<Class<?>> lengthNeededTypes = List.of(String.class);
     private final int length;
@@ -36,7 +37,10 @@ public class ColumnLength {
     private int getColumnLength(Field field) {
         final Column column = field.getAnnotation(Column.class);
         if (!lengthNeededTypes.contains(field.getType())) {
-            return DEFAULT_LENGTH;
+            return MIN_LENGTH;
+        }
+        if (Objects.isNull(column)) {
+            return MAX_LENGTH;
         }
         return column.length();
     }
