@@ -3,7 +3,7 @@ package persistence.entity;
 import jdbc.JdbcTemplate;
 import persistence.sql.dml.DeleteQueryBuilder;
 import persistence.sql.dml.InsertQueryBuilder;
-import persistence.sql.dml.SelectQueryBuilder;
+import persistence.sql.dml.SelectQuery;
 import persistence.sql.dml.UpdateQueryBuilder;
 import persistence.meta.EntityColumn;
 import persistence.meta.EntityTable;
@@ -33,7 +33,7 @@ public class DefaultEntityManager implements EntityManager {
         return new DefaultEntityManager(
                 new DefaultPersistenceContext(),
                 new DefaultEntityPersister(jdbcTemplate, new InsertQueryBuilder(), new UpdateQueryBuilder(), new DeleteQueryBuilder()),
-                new DefaultEntityLoader(jdbcTemplate, new SelectQueryBuilder())
+                new DefaultEntityLoader(jdbcTemplate, new SelectQuery())
         );
     }
 

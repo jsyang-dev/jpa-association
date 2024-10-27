@@ -1,32 +1,42 @@
 package persistence.sql.dml;
 
-import persistence.meta.EntityColumn;
-import persistence.meta.EntityTable;
-
-import java.util.List;
-import java.util.stream.Collectors;
-
 public class SelectQueryBuilder {
-    private static final String FIND_ALL_QUERY_TEMPLATE = "SELECT %s FROM %s";
-    private static final String FIND_BY_ID_QUERY_TEMPLATE = "SELECT %s FROM %s WHERE %s";
+    private static final String SELECT_CLAUSE = "SELECT";
+    private static final String FROM_CLAUSE = "FROM";
+    private static final String WHERE_CLAUSE = "WHERE";
+    private static final String BLANK = " ";
 
-    public String findAll(Class<?> entityType) {
-        final EntityTable entityTable = new EntityTable(entityType);
-        return FIND_ALL_QUERY_TEMPLATE.formatted(getColumnClause(entityTable), entityTable.getTableName());
+    private final StringBuilder sql;
+
+    public SelectQueryBuilder() {
+        this.sql = new StringBuilder();
     }
 
-    public String findById(Class<?> entityType, Object id) {
-        final EntityTable entityTable = new EntityTable(entityType);
-        return FIND_BY_ID_QUERY_TEMPLATE.formatted(getColumnClause(entityTable), entityTable.getTableName(),
-                entityTable.getWhereClause(id));
+    public SelectQueryBuilder select(String clause) {
+        sql.append(SELECT_CLAUSE)
+                .append(BLANK)
+                .append(clause)
+                .append(BLANK);
+        return this;
     }
 
-    private String getColumnClause(EntityTable entityTable) {
-        final List<String> columnDefinitions = entityTable.getEntityColumns()
-                .stream()
-                .map(EntityColumn::getColumnName)
-                .collect(Collectors.toList());
+    public SelectQueryBuilder from(String clause) {
+        sql.append(FROM_CLAUSE)
+                .append(BLANK)
+                .append(clause)
+                .append(BLANK);
+        return this;
+    }
 
-        return String.join(", ", columnDefinitions);
+    public SelectQueryBuilder where(String clause) {
+        sql.append(WHERE_CLAUSE)
+                .append(BLANK)
+                .append(clause)
+                .append(BLANK);
+        return this;
+    }
+
+    public String build() {
+        return sql.toString().trim();
     }
 }

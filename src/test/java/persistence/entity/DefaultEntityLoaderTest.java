@@ -10,7 +10,7 @@ import persistence.dialect.H2Dialect;
 import persistence.fixture.EntityWithId;
 import persistence.sql.ddl.CreateQueryBuilder;
 import persistence.sql.ddl.DropQueryBuilder;
-import persistence.sql.dml.SelectQueryBuilder;
+import persistence.sql.dml.SelectQuery;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -36,7 +36,7 @@ class DefaultEntityLoaderTest {
     @DisplayName("엔티티를 로드한다.")
     void load() {
         // given
-        final EntityLoader entityLoader = new DefaultEntityLoader(jdbcTemplate, new SelectQueryBuilder());
+        final EntityLoader entityLoader = new DefaultEntityLoader(jdbcTemplate, new SelectQuery());
         final EntityWithId entity = new EntityWithId("Jaden", 30, "test@email.com", 1);
         insertData(entity);
 

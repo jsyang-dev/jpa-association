@@ -8,15 +8,15 @@ import persistence.meta.EntityColumns;
 
 import static org.assertj.core.api.Assertions.*;
 
-class SelectQueryBuilderTest {
+class SelectQueryTest {
     @Test
     @DisplayName("findAll 쿼리를 생성한다.")
     void findAll() {
         // given
-        final SelectQueryBuilder selectQueryBuilder = new SelectQueryBuilder();
+        final SelectQuery selectQuery = new SelectQuery();
 
         // when
-        final String query = selectQueryBuilder.findAll(EntityWithId.class);
+        final String query = selectQuery.findAll(EntityWithId.class);
 
         // then
         assertThat(query).isEqualTo("SELECT id, nick_name, old, email FROM users");
@@ -26,10 +26,10 @@ class SelectQueryBuilderTest {
     @DisplayName("findById 쿼리를 생성한다.")
     void findById() {
         // given
-        final SelectQueryBuilder selectQueryBuilder = new SelectQueryBuilder();
+        final SelectQuery selectQuery = new SelectQuery();
 
         // when
-        final String query = selectQueryBuilder.findById(EntityWithId.class, 1);
+        final String query = selectQuery.findById(EntityWithId.class, 1);
 
         // then
         assertThat(query).isEqualTo("SELECT id, nick_name, old, email FROM users WHERE id = 1");
@@ -39,10 +39,10 @@ class SelectQueryBuilderTest {
     @DisplayName("@Id가 없는 엔티티로 findById 쿼리를 생성하면 예외를 발생한다.")
     void findById_exception() {
         // given
-        final SelectQueryBuilder selectQueryBuilder = new SelectQueryBuilder();
+        final SelectQuery selectQuery = new SelectQuery();
 
         // when & then
-        assertThatThrownBy(() -> selectQueryBuilder.findById(EntityWithoutID.class, 1))
+        assertThatThrownBy(() -> selectQuery.findById(EntityWithoutID.class, 1))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessage(EntityColumns.NOT_ID_FAILED_MESSAGE);
     }

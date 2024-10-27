@@ -12,7 +12,7 @@ import persistence.sql.ddl.CreateQueryBuilder;
 import persistence.sql.ddl.DropQueryBuilder;
 import persistence.sql.dml.DeleteQueryBuilder;
 import persistence.sql.dml.InsertQueryBuilder;
-import persistence.sql.dml.SelectQueryBuilder;
+import persistence.sql.dml.SelectQuery;
 import persistence.sql.dml.UpdateQueryBuilder;
 import persistence.meta.EntityTable;
 
@@ -27,7 +27,7 @@ class DefaultEntityPersisterTest {
     @BeforeEach
     void setUp() {
         jdbcTemplate = new JdbcTemplate(H2ConnectionFactory.getConnection());
-        entityLoader = new DefaultEntityLoader(jdbcTemplate, new SelectQueryBuilder());
+        entityLoader = new DefaultEntityLoader(jdbcTemplate, new SelectQuery());
         entityManager = DefaultEntityManager.of(jdbcTemplate);
 
         createTable();
