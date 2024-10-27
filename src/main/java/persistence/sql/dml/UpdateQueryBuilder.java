@@ -1,7 +1,7 @@
 package persistence.sql.dml;
 
-import persistence.sql.meta.EntityColumn;
-import persistence.sql.meta.EntityTable;
+import persistence.meta.EntityColumn;
+import persistence.meta.EntityTable;
 
 import java.util.List;
 import java.util.stream.Collectors;

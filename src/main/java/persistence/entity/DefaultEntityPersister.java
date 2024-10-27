@@ -5,7 +5,7 @@ import jdbc.JdbcTemplate;
 import persistence.sql.dml.DeleteQueryBuilder;
 import persistence.sql.dml.InsertQueryBuilder;
 import persistence.sql.dml.UpdateQueryBuilder;
-import persistence.sql.meta.EntityColumn;
+import persistence.meta.EntityColumn;
 
 import java.util.List;
 

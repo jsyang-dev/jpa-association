@@ -1,4 +1,4 @@
-package persistence.sql.meta;
+package persistence.meta;
 
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;

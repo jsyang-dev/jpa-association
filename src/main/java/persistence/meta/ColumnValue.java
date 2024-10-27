@@ -1,4 +1,4 @@
-package persistence.sql.meta;
+package persistence.meta;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

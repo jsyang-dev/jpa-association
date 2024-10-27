@@ -1,9 +1,10 @@
-package persistence.sql.meta;
+package persistence.meta;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.fixture.EntityWithId;
 import persistence.fixture.EntityWithoutTable;
+import persistence.meta.TableName;
 
 import static org.assertj.core.api.Assertions.*;
 

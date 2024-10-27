@@ -5,8 +5,8 @@ import persistence.sql.dml.DeleteQueryBuilder;
 import persistence.sql.dml.InsertQueryBuilder;
 import persistence.sql.dml.SelectQueryBuilder;
 import persistence.sql.dml.UpdateQueryBuilder;
-import persistence.sql.meta.EntityColumn;
-import persistence.sql.meta.EntityTable;
+import persistence.meta.EntityColumn;
+import persistence.meta.EntityTable;
 
 import java.util.List;
 import java.util.Objects;

@@ -1,13 +1,13 @@
-package persistence.sql.meta;
+package persistence.meta;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.fixture.EntityWithId;
+import persistence.meta.ColumnOption;
 import util.ReflectionUtils;
 
 import java.lang.reflect.Field;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.assertj.core.api.Assertions.*;
 
 class ColumnOptionTest {

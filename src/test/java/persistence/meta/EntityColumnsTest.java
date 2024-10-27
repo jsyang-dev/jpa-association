@@ -1,9 +1,11 @@
-package persistence.sql.meta;
+package persistence.meta;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.fixture.EntityWithId;
 import persistence.fixture.EntityWithoutID;
+import persistence.meta.EntityColumn;
+import persistence.meta.EntityColumns;
 import util.ReflectionUtils;
 
 import java.lang.reflect.Field;

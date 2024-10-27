@@ -1,4 +1,4 @@
-package persistence.sql.meta;
+package persistence.meta;
 
 import java.util.Objects;
 

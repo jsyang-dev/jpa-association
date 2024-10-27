@@ -1,9 +1,9 @@
 package persistence.sql.ddl;
 
 import persistence.dialect.Dialect;
-import persistence.sql.meta.EntityColumn;
-import persistence.sql.meta.EntityTable;
-import persistence.sql.meta.JavaTypeConvertor;
+import persistence.meta.EntityColumn;
+import persistence.meta.EntityTable;
+import persistence.meta.JavaTypeConvertor;
 
 import java.util.List;
 import java.util.stream.Collectors;

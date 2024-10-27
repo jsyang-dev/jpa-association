@@ -4,7 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.fixture.EntityWithId;
 import persistence.fixture.EntityWithoutID;
-import persistence.sql.meta.EntityColumns;
+import persistence.meta.EntityColumns;
 
 import static org.assertj.core.api.Assertions.*;
 

@@ -1,6 +1,6 @@
 package persistence.entity;
 
-import persistence.sql.meta.EntityColumn;
+import persistence.meta.EntityColumn;
 
 import java.util.List;
 

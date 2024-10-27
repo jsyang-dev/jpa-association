@@ -1,4 +1,4 @@
-package persistence.sql.meta;
+package persistence.meta;
 
 import jakarta.persistence.GenerationType;
 import org.junit.jupiter.api.DisplayName;
@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import persistence.fixture.EntityWithId;
 import persistence.fixture.EntityWithOnlyId;
 import persistence.fixture.EntityWithoutID;
+import persistence.meta.ColumnIdOption;
 import util.ReflectionUtils;
 
 import java.lang.reflect.Field;
