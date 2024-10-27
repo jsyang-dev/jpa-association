@@ -6,7 +6,7 @@ import persistence.meta.EntityTable;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class InsertQueryBuilder {
+public class InsertQuery {
     private static final String QUERY_TEMPLATE = "INSERT INTO %s (%s) VALUES (%s)";
 
     public String insert(Object entity) {

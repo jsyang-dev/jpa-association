@@ -8,8 +8,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.dialect.H2Dialect;
 import persistence.fixture.EntityWithId;
-import persistence.sql.ddl.CreateQueryBuilder;
-import persistence.sql.ddl.DropQueryBuilder;
+import persistence.sql.ddl.CreateQuery;
+import persistence.sql.ddl.DropQuery;
 import persistence.sql.dml.SelectQuery;
 
 import static org.assertj.core.api.Assertions.*;
@@ -55,8 +55,8 @@ class DefaultEntityLoaderTest {
     }
 
     private void createTable() {
-        final CreateQueryBuilder createQueryBuilder = new CreateQueryBuilder(EntityWithId.class, new H2Dialect());
-        jdbcTemplate.execute(createQueryBuilder.create());
+        final CreateQuery createQuery = new CreateQuery(EntityWithId.class, new H2Dialect());
+        jdbcTemplate.execute(createQuery.create());
     }
 
     private void insertData(EntityWithId entity) {
@@ -65,7 +65,7 @@ class DefaultEntityLoaderTest {
     }
 
     private void dropTable() {
-        final DropQueryBuilder dropQueryBuilder = new DropQueryBuilder(EntityWithId.class);
-        jdbcTemplate.execute(dropQueryBuilder.drop());
+        final DropQuery dropQuery = new DropQuery(EntityWithId.class);
+        jdbcTemplate.execute(dropQuery.drop());
     }
 }

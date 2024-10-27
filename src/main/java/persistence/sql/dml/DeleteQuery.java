@@ -2,7 +2,7 @@ package persistence.sql.dml;
 
 import persistence.meta.EntityTable;
 
-public class DeleteQueryBuilder {
+public class DeleteQuery {
     private static final String QUERY_TEMPLATE = "DELETE FROM %s WHERE %s";
 
     public String delete(Object entity) {

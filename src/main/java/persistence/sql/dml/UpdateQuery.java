@@ -6,7 +6,7 @@ import persistence.meta.EntityTable;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class UpdateQueryBuilder {
+public class UpdateQuery {
     private static final String QUERY_TEMPLATE = "UPDATE %s SET %s WHERE %s";
 
     public String update(Object entity, List<EntityColumn> entityColumns) {

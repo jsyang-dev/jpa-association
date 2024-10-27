@@ -6,16 +6,16 @@ import persistence.fixture.EntityWithId;
 
 import static org.assertj.core.api.Assertions.*;
 
-class DeleteQueryBuilderTest {
+class DeleteQueryTest {
     @Test
     @DisplayName("delete 쿼리를 생성한다.")
     void delete() {
         // given
         final EntityWithId entity = new EntityWithId(1L, "Jaden", 30, "test@email.com");
-        final DeleteQueryBuilder deleteQueryBuilder = new DeleteQueryBuilder();
+        final DeleteQuery deleteQuery = new DeleteQuery();
 
         // when
-        final String query = deleteQueryBuilder.delete(entity);
+        final String query = deleteQuery.delete(entity);
 
         // then
         assertThat(query).isEqualTo("DELETE FROM users WHERE id = 1");

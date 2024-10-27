@@ -8,16 +8,16 @@ import persistence.fixture.EntityWithId;
 
 import static org.assertj.core.api.Assertions.*;
 
-class CreateQueryBuilderTest {
+class CreateQueryTest {
     @Test
     @DisplayName("create 쿼리를 생성한다.")
     void create() {
         // given
         final Dialect dialect = new H2Dialect();
-        final CreateQueryBuilder createQueryBuilder = new CreateQueryBuilder(EntityWithId.class, dialect);
+        final CreateQuery createQuery = new CreateQuery(EntityWithId.class, dialect);
 
         // when
-        final String query = createQueryBuilder.create();
+        final String query = createQuery.create();
 
         // then
         assertThat(query).isEqualTo(

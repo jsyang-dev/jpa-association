@@ -8,7 +8,7 @@ import persistence.meta.JavaTypeConvertor;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class CreateQueryBuilder {
+public class CreateQuery {
     private static final String QUERY_TEMPLATE = "CREATE TABLE %s (%s)";
     private static final String NOT_NULL_COLUMN_DEFINITION = "NOT NULL";
     private static final String GENERATION_COLUMN_DEFINITION = "AUTO_INCREMENT";
@@ -17,7 +17,7 @@ public class CreateQueryBuilder {
     private final EntityTable entityTable;
     private final Dialect dialect;
 
-    public CreateQueryBuilder(Class<?> entityType, Dialect dialect) {
+    public CreateQuery(Class<?> entityType, Dialect dialect) {
         this.entityTable = new EntityTable(entityType);
         this.dialect = dialect;
     }
