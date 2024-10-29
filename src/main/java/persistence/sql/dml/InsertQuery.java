@@ -17,7 +17,7 @@ public class InsertQuery {
     private String getColumnClause(EntityTable entityTable) {
         final List<String> columnDefinitions = entityTable.getEntityColumns()
                 .stream()
-                .filter(this::isNotNeeded)
+                .filter(this::isAvailable)
                 .map(EntityColumn::getColumnName)
                 .collect(Collectors.toList());
 
@@ -27,14 +27,14 @@ public class InsertQuery {
     private String getValueClause(EntityTable entityTable) {
         final List<String> columnDefinitions = entityTable.getEntityColumns()
                 .stream()
-                .filter(this::isNotNeeded)
+                .filter(this::isAvailable)
                 .map(EntityColumn::getValueWithQuotes)
                 .collect(Collectors.toList());
 
         return String.join(", ", columnDefinitions);
     }
 
-    private boolean isNotNeeded(EntityColumn entityColumn) {
-        return !entityColumn.isGenerationValue();
+    private boolean isAvailable(EntityColumn entityColumn) {
+        return !entityColumn.isGenerationValue() && !entityColumn.isOneToManyAssociation();
     }
 }
