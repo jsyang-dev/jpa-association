@@ -3,10 +3,15 @@ package persistence.sql.ddl;
 import persistence.dialect.Dialect;
 import persistence.meta.EntityColumn;
 import persistence.meta.EntityTable;
+import persistence.meta.EntityTables;
 import persistence.meta.JavaTypeConvertor;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
+
+import static persistence.sql.SqlConst.*;
 
 public class CreateQuery {
     private static final String QUERY_TEMPLATE = "CREATE TABLE %s (%s)";
@@ -22,21 +27,43 @@ public class CreateQuery {
         this.dialect = dialect;
     }
 
-    public String create() {
-        return QUERY_TEMPLATE.formatted(entityTable.getTableName(), getColumnClause());
+    public List<String> create() {
+        final List<String> sqls = new ArrayList<>();
+        sqls.add(QUERY_TEMPLATE.formatted(entityTable.getTableName(), getColumnClause(entityTable)));
+
+        final EntityTables entityTables = entityTable.getEntityTables();
+        final EntityTable foriegnEntityTable = entityTables.getFirst();
+        if (Objects.nonNull(foriegnEntityTable)) {
+            sqls.add(QUERY_TEMPLATE.formatted(foriegnEntityTable.getTableName(), getColumnClause(foriegnEntityTable)));
+        }
+
+        return sqls;
     }
 
-    private String getColumnClause() {
+    private String getColumnClause(EntityTable entityTable) {
         final List<String> columnDefinitions = entityTable.getEntityColumns()
                 .stream()
+                .filter(this::isNotNeeded)
                 .map(this::getColumnDefinition)
                 .collect(Collectors.toList());
 
-        return String.join(", ", columnDefinitions);
+        final EntityTable masterEntityTable = entityTable.getMasterEntityTable();
+        if (Objects.nonNull(masterEntityTable)) {
+            columnDefinitions.add(masterEntityTable.getForeignColumnName() + " " +
+                    getDbType(masterEntityTable.getIdColumnType(), masterEntityTable.getIdColumnLength()));
+        }
+
+        return String.join(COLUMN_DELIMITER, columnDefinitions);
     }
 
+    private boolean isNotNeeded(EntityColumn entityColumn) {
+        return Objects.nonNull(entityColumn) && !entityColumn.isOneToManyAssociation();
+    }
+
+    // TODO: create 쿼리 빌더 분리
     private String getColumnDefinition(EntityColumn entityColumn) {
-        String columDefinition = entityColumn.getColumnName() + " " + getDbType(entityColumn);
+        String columDefinition = entityColumn.getColumnName() + " " +
+                getDbType(entityColumn.getType(), entityColumn.getColumnLength());
 
         if (entityColumn.isNotNull()) {
             columDefinition += " " + NOT_NULL_COLUMN_DEFINITION;
@@ -53,10 +80,9 @@ public class CreateQuery {
         return columDefinition;
     }
 
-    private String getDbType(EntityColumn entityColumn) {
-        final int sqlType = new JavaTypeConvertor().getSqlType(entityColumn.getType());
+    private String getDbType(Class<?> columnType, int columnLength) {
+        final int sqlType = new JavaTypeConvertor().getSqlType(columnType);
         final String dbTypeName = dialect.getDbTypeName(sqlType);
-        final int columnLength = entityColumn.getColumnLength();
 
         if (columnLength == 0) {
             return dbTypeName;
