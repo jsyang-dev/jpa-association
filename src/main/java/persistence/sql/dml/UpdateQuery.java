@@ -6,6 +6,8 @@ import persistence.meta.EntityTable;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static persistence.sql.QueryConst.*;
+
 public class UpdateQuery {
     private static final String QUERY_TEMPLATE = "UPDATE %s SET %s WHERE %s";
 
@@ -20,10 +22,10 @@ public class UpdateQuery {
                 .map(this::getSetClause)
                 .collect(Collectors.toList());
 
-        return String.join(", ", columnDefinitions);
+        return String.join(COLUMN_DELIMITER, columnDefinitions);
     }
 
     private String getSetClause(EntityColumn entityColumn) {
-        return entityColumn.getColumnName() + " = " + entityColumn.getValueWithQuotes();
+        return entityColumn.getColumnName() + EQUAL + entityColumn.getValueWithQuotes();
     }
 }

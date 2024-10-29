@@ -6,6 +6,8 @@ import persistence.meta.EntityTable;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static persistence.sql.QueryConst.*;
+
 public class InsertQuery {
     private static final String QUERY_TEMPLATE = "INSERT INTO %s (%s) VALUES (%s)";
 
@@ -34,7 +36,7 @@ public class InsertQuery {
                 .map(EntityColumn::getColumnName)
                 .collect(Collectors.toList());
 
-        return String.join(", ", columnDefinitions);
+        return String.join(COLUMN_DELIMITER, columnDefinitions);
     }
 
     private String getValueClause(EntityTable entityTable) {
@@ -44,17 +46,17 @@ public class InsertQuery {
                 .map(EntityColumn::getValueWithQuotes)
                 .collect(Collectors.toList());
 
-        return String.join(", ", values);
+        return String.join(COLUMN_DELIMITER, values);
     }
 
     private String getColumnClause(EntityTable entityTable, EntityTable parentEntityTable) {
         final String columnClause = getColumnClause(entityTable);
-        return columnClause + ", " + parentEntityTable.getJoinColumnName();
+        return columnClause + COLUMN_DELIMITER + parentEntityTable.getJoinColumnName();
     }
 
     private String getValueClause(EntityTable entityTable, EntityTable parentEntityTable) {
         final String valueClause = getValueClause(entityTable);
-        return valueClause + ", " + parentEntityTable.getIdValue();
+        return valueClause + COLUMN_DELIMITER + parentEntityTable.getIdValue();
     }
 
     private boolean isAvailable(EntityColumn entityColumn) {

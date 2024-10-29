@@ -1,14 +1,8 @@
 package persistence.sql.dml;
 
-public class SelectQueryBuilder {
-    private static final String SELECT_CLAUSE = "SELECT";
-    private static final String FROM_CLAUSE = "FROM";
-    private static final String WHERE_CLAUSE = "WHERE";
-    private static final String INNER_JOIN__CLAUSE = "INNER JOIN";
-    private static final String ON_CLAUSE = "ON";
-    private static final String BLANK = " ";
-    private static final String EQUAL = " = ";
+import static persistence.sql.QueryConst.*;
 
+public class SelectQueryBuilder {
     private final StringBuilder sql;
 
     public SelectQueryBuilder() {

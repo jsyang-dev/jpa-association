@@ -8,6 +8,8 @@ import persistence.meta.JavaTypeConvertor;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static persistence.sql.QueryConst.*;
+
 public class CreateQuery {
     private static final String QUERY_TEMPLATE = "CREATE TABLE %s (%s)";
     private static final String NOT_NULL_COLUMN_DEFINITION = "NOT NULL";
@@ -37,7 +39,7 @@ public class CreateQuery {
                 .map(this::getColumnDefinition)
                 .collect(Collectors.toList());
 
-        return String.join(", ", columnDefinitions);
+        return String.join(COLUMN_DELIMITER, columnDefinitions);
     }
 
     private Object getColumnClause(Class<?> parentEntityType) {
@@ -55,7 +57,7 @@ public class CreateQuery {
         columnDefinitions.add(
                 getForeignColumnDefinition(parentEntityTable.getJoinEntityColumn(), parentEntityTable.getIdEntityColumn()));
 
-        return String.join(", ", columnDefinitions);
+        return String.join(COLUMN_DELIMITER, columnDefinitions);
     }
 
     private boolean isAvailable(EntityColumn entityColumn) {
@@ -63,25 +65,25 @@ public class CreateQuery {
     }
 
     private String getColumnDefinition(EntityColumn entityColumn) {
-        String columDefinition = entityColumn.getColumnName() + " " + getDbType(entityColumn);
+        String columDefinition = entityColumn.getColumnName() + BLANK + getDbType(entityColumn);
 
         if (entityColumn.isNotNull()) {
-            columDefinition += " " + NOT_NULL_COLUMN_DEFINITION;
+            columDefinition += BLANK + NOT_NULL_COLUMN_DEFINITION;
         }
 
         if (entityColumn.isGenerationValue()) {
-            columDefinition += " " + GENERATION_COLUMN_DEFINITION;
+            columDefinition += BLANK + GENERATION_COLUMN_DEFINITION;
         }
 
         if (entityColumn.isId()) {
-            columDefinition += " " + PRIMARY_KEY_COLUMN_DEFINITION;
+            columDefinition += BLANK + PRIMARY_KEY_COLUMN_DEFINITION;
         }
 
         return columDefinition;
     }
 
     private String getForeignColumnDefinition(EntityColumn parentJoinEntityColumn, EntityColumn parentIdEntityColumn) {
-        return parentJoinEntityColumn.getColumnName() + " " + getDbType(parentIdEntityColumn);
+        return parentJoinEntityColumn.getColumnName() + BLANK + getDbType(parentIdEntityColumn);
     }
 
     private String getDbType(EntityColumn entityColumn) {

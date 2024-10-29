@@ -6,11 +6,9 @@ import persistence.meta.EntityTable;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class SelectQuery {
-    private static final String COLUMN_DELIMITER = ", ";
-    private static final String COLUMN_ALIAS_DELIMITER = ".";
-    private static final String TABLE_ALIAS_DELIMITER = " ";
+import static persistence.sql.QueryConst.*;
 
+public class SelectQuery {
     public String findAll(Class<?> entityType) {
         final EntityTable entityTable = new EntityTable(entityType);
 
