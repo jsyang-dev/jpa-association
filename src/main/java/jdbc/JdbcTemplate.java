@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -22,8 +23,8 @@ public class JdbcTemplate {
 
     public void execute(final String sql) {
         logger.debug(sql);
-        try (final Statement statement = connection.createStatement()) {
-            statement.execute(sql);
+        try (final PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.execute();
         } catch (Exception e) {
             throw new IllegalArgumentException(QUERY_EXECUTE_FAILED_MESSAGE);
         }
@@ -31,8 +32,8 @@ public class JdbcTemplate {
 
     public void executeAndReturnGeneratedKeys(final String sql, final IdMapper idMapper) {
         logger.debug(sql);
-        try (final Statement statement = connection.createStatement()) {
-            statement.execute(sql, Statement.RETURN_GENERATED_KEYS);
+        try (final PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            statement.execute();
             ResultSet generatedKeys = statement.getGeneratedKeys();
             if (generatedKeys.next()) {
                 idMapper.mapRow(generatedKeys);
