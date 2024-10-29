@@ -5,6 +5,7 @@ import jakarta.persistence.Transient;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class EntityColumns {
@@ -30,6 +31,19 @@ public class EntityColumns {
         return entityColumns;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        EntityColumns that = (EntityColumns) o;
+        return Objects.equals(entityColumns, that.entityColumns);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(entityColumns);
+    }
+
     public EntityColumn getIdEntityColumn() {
         return entityColumns.stream()
                 .filter(EntityColumn::isId)
@@ -41,7 +55,7 @@ public class EntityColumns {
         return !field.isAnnotationPresent(Transient.class);
     }
 
-    public EntityColumn getJoinEntityColumn() {
+    public EntityColumn getForeignEntityColumn() {
         return entityColumns.stream()
                 .filter(EntityColumn::isOneToManyAssociation)
                 .findFirst()

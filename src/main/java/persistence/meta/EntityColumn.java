@@ -84,7 +84,7 @@ public class EntityColumn {
         return columnOption.isOneToManyAssociation();
     }
 
-    public Class<?> getJoinColumnType() {
-        return columnOption.getJoinColumnType();
+    public Class<?> getForeignTableType() {
+        return columnOption.getForeignTableType();
     }
 }

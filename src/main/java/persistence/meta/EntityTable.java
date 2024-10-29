@@ -12,12 +12,15 @@ public class EntityTable {
     private final Class<?> type;
     private final TableName tableName;
     private final EntityColumns entityColumns;
+    private EntityTables entityTables;
+    private EntityTable masterEntityTable;
 
     public EntityTable(Class<?> entityType) {
         validate(entityType);
         this.type = entityType;
         this.tableName = new TableName(entityType);
         this.entityColumns = new EntityColumns(entityType);
+        this.entityTables = new EntityTables(entityType, this);
     }
 
     public EntityTable(Object entity) {
@@ -25,6 +28,23 @@ public class EntityTable {
         this.type = entity.getClass();
         this.tableName = new TableName(entity.getClass());
         this.entityColumns = new EntityColumns(entity);
+        this.entityTables = new EntityTables(entity, this);
+    }
+
+    public EntityTable(Class<?> entityType, EntityTable masterEntityTable) {
+        validate(entityType);
+        this.type = entityType;
+        this.tableName = new TableName(entityType);
+        this.entityColumns = new EntityColumns(entityType);
+        this.masterEntityTable = masterEntityTable;
+    }
+
+    public EntityTable(Object entity, EntityTable masterEntityTable) {
+        validate(entity.getClass());
+        this.type = entity.getClass();
+        this.tableName = new TableName(entity.getClass());
+        this.entityColumns = new EntityColumns(entity);
+        this.masterEntityTable = masterEntityTable;
     }
 
     public String getTableName() {
@@ -35,17 +55,27 @@ public class EntityTable {
         return entityColumns.getEntityColumns();
     }
 
+    public EntityTables getEntityTables() {
+        return entityTables;
+    }
+
+    public EntityTable getMasterEntityTable() {
+        return masterEntityTable;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         EntityTable that = (EntityTable) o;
-        return Objects.equals(type, that.type) && Objects.equals(tableName, that.tableName) && Objects.equals(entityColumns, that.entityColumns);
+        return Objects.equals(type, that.type) && Objects.equals(tableName, that.tableName)
+                && Objects.equals(entityColumns, that.entityColumns) && Objects.equals(entityTables, that.entityTables)
+                && Objects.equals(masterEntityTable, that.masterEntityTable);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(type, tableName, entityColumns);
+        return Objects.hash(type, tableName, entityColumns, entityTables, masterEntityTable);
     }
 
     public String getWhereClause() {
@@ -58,6 +88,14 @@ public class EntityTable {
 
     public String getIdColumnName() {
         return getIdEntityColumn().getColumnName();
+    }
+
+    public Class<?> getIdColumnType() {
+        return getIdEntityColumn().getType();
+    }
+
+    public int getIdColumnLength() {
+        return getIdEntityColumn().getColumnLength();
     }
 
     public Object getIdValue() {
@@ -92,36 +130,32 @@ public class EntityTable {
     }
 
     public boolean isOneToManyAssociation() {
-        final EntityColumn joinEntityColumn = getJoinEntityColumn();
-        if (Objects.isNull(joinEntityColumn)) {
+        final EntityColumn foreignEntityColumn = entityColumns.getForeignEntityColumn();
+        if (Objects.isNull(foreignEntityColumn)) {
             return false;
         }
-        return joinEntityColumn.isOneToManyAssociation();
+        return foreignEntityColumn.isOneToManyAssociation();
     }
 
-    public Class<?> getJoinColumnType() {
-        return getJoinEntityColumn().getJoinColumnType();
+    public Class<?> getForeignTableType() {
+        return entityColumns.getForeignEntityColumn().getForeignTableType();
     }
 
-    public String getJoinColumnName() {
-        return getJoinEntityColumn().getColumnName();
+    public String getForeignColumnName() {
+        return entityColumns.getForeignEntityColumn().getColumnName();
     }
 
     public String getAlias() {
         return ALIAS_PREFIX + getTableName();
     }
 
+    public EntityColumn getIdEntityColumn() {
+        return entityColumns.getIdEntityColumn();
+    }
+
     private void validate(Class<?> entityType) {
         if (!entityType.isAnnotationPresent(Entity.class)) {
             throw new IllegalArgumentException(NOT_ENTITY_FAILED_MESSAGE);
         }
-    }
-
-    private EntityColumn getIdEntityColumn() {
-        return entityColumns.getIdEntityColumn();
-    }
-
-    private EntityColumn getJoinEntityColumn() {
-        return entityColumns.getJoinEntityColumn();
     }
 }

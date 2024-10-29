@@ -14,15 +14,15 @@ public class ColumnOption {
     private final boolean isNotNull;
     private final boolean isOneToManyAssociation;
     private final FetchType fetchType;
-    private final String joinColumnName;
-    private final Class<?> joinColumnType;
+    private final String foreignColumnName;
+    private final Class<?> foreignTableType;
 
     public ColumnOption(Field field) {
         this.isNotNull = isNotNull(field);
         this.isOneToManyAssociation = isOneToManyAssociation(field);
         this.fetchType = getFetchType(field);
-        this.joinColumnName = getJoinColumnName(field);
-        this.joinColumnType = getJoinColumnType(field);
+        this.foreignColumnName = getForeignColumnName(field);
+        this.foreignTableType = getForeignTableType(field);
     }
 
     public boolean isNotNull() {
@@ -37,12 +37,12 @@ public class ColumnOption {
         return fetchType;
     }
 
-    public String getJoinColumnName() {
-        return joinColumnName;
+    public String getForeignColumnName() {
+        return foreignColumnName;
     }
 
-    public Class<?> getJoinColumnType() {
-        return joinColumnType;
+    public Class<?> getForeignTableType() {
+        return foreignTableType;
     }
 
     @Override
@@ -50,12 +50,14 @@ public class ColumnOption {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ColumnOption that = (ColumnOption) o;
-        return isNotNull == that.isNotNull;
+        return isNotNull == that.isNotNull && isOneToManyAssociation == that.isOneToManyAssociation
+                && fetchType == that.fetchType && Objects.equals(foreignColumnName, that.foreignColumnName)
+                && Objects.equals(foreignTableType, that.foreignTableType);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(isNotNull);
+        return Objects.hash(isNotNull, isOneToManyAssociation, fetchType, foreignColumnName, foreignTableType);
     }
 
     private boolean isNotNull(Field field) {
@@ -79,7 +81,7 @@ public class ColumnOption {
         return oneToMany.fetch();
     }
 
-    private String getJoinColumnName(Field field) {
+    private String getForeignColumnName(Field field) {
         final JoinColumn joinColumn = field.getAnnotation(JoinColumn.class);
         if (Objects.isNull(joinColumn) || Objects.isNull(joinColumn.name()) || joinColumn.name().isBlank()) {
             return null;
@@ -87,7 +89,7 @@ public class ColumnOption {
         return joinColumn.name();
     }
 
-    private Class<?> getJoinColumnType(Field field) {
+    private Class<?> getForeignTableType(Field field) {
         final JoinColumn joinColumn = field.getAnnotation(JoinColumn.class);
         if (Objects.isNull(joinColumn)) {
             return null;

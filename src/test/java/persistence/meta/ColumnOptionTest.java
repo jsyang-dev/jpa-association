@@ -6,7 +6,6 @@ import jakarta.persistence.FetchType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.fixture.EntityWithId;
-import persistence.meta.ColumnOption;
 import util.ReflectionUtils;
 
 import java.lang.reflect.Field;
@@ -104,8 +103,8 @@ class ColumnOptionTest {
 
         // then
         assertAll(
-                () -> assertThat(columnOption.getJoinColumnName()).isEqualTo("order_id"),
-                () -> assertThat(columnOption.getJoinColumnType()).isEqualTo(OrderItem.class)
+                () -> assertThat(columnOption.getForeignColumnName()).isEqualTo("order_id"),
+                () -> assertThat(columnOption.getForeignTableType()).isEqualTo(OrderItem.class)
         );
 
     }
@@ -121,8 +120,8 @@ class ColumnOptionTest {
 
         // then
         assertAll(
-                () -> assertThat(columnOption.getJoinColumnName()).isNull(),
-                () -> assertThat(columnOption.getJoinColumnType()).isNull()
+                () -> assertThat(columnOption.getForeignColumnName()).isNull(),
+                () -> assertThat(columnOption.getForeignTableType()).isNull()
         );
     }
 }

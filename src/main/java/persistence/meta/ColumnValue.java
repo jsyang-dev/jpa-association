@@ -21,7 +21,7 @@ public class ColumnValue {
 
     public ColumnValue(Field field, Object entity) {
         this.type = field.getType();
-        this.value = value(field, entity);
+        this.value = getValue(field, entity);
         this.isQuotesNeeded = isQuotesNeeded();
     }
 
@@ -36,7 +36,7 @@ public class ColumnValue {
         return String.valueOf(value);
     }
 
-    private Object value(Field field, Object entity) {
+    private Object getValue(Field field, Object entity) {
         try {
             field.setAccessible(true);
             return field.get(entity);
