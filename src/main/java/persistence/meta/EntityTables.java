@@ -37,6 +37,10 @@ public class EntityTables {
                 .collect(Collectors.toList());
     }
 
+    public List<EntityTable> getEntityTables() {
+        return entityTables;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
