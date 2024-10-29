@@ -8,13 +8,13 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.dialect.H2Dialect;
 import persistence.fixture.EntityWithId;
+import persistence.meta.EntityTable;
 import persistence.sql.ddl.CreateQuery;
 import persistence.sql.ddl.DropQuery;
 import persistence.sql.dml.DeleteQuery;
 import persistence.sql.dml.InsertQuery;
 import persistence.sql.dml.SelectQuery;
 import persistence.sql.dml.UpdateQuery;
-import persistence.meta.EntityTable;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -112,7 +112,6 @@ class DefaultEntityPersisterTest {
 
     private void insertData(EntityWithId entity) {
         entityManager.persist(entity);
-        entityManager.flush();
     }
 
     private void dropTable() {

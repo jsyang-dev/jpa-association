@@ -18,11 +18,9 @@ public class UpdateQuery {
     }
 
     private String getSetClause(List<EntityColumn> entityColumns) {
-        final List<String> columnDefinitions = entityColumns.stream()
+        return entityColumns.stream()
                 .map(this::getSetClause)
-                .collect(Collectors.toList());
-
-        return String.join(COLUMN_DELIMITER, columnDefinitions);
+                .collect(Collectors.joining(COLUMN_DELIMITER));
     }
 
     private String getSetClause(EntityColumn entityColumn) {

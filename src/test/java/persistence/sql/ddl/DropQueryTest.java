@@ -14,9 +14,9 @@ class DropQueryTest {
         final DropQuery dropQuery = new DropQuery(EntityWithId.class);
 
         // when
-        final String query = dropQuery.drop();
+        final String sql = dropQuery.drop();
 
         // then
-        assertThat(query).isEqualTo("DROP TABLE IF EXISTS users");
+        assertThat(sql).isEqualTo("DROP TABLE IF EXISTS users");
     }
 }

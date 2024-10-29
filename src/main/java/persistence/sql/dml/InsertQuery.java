@@ -24,29 +24,26 @@ public class InsertQuery {
         final List joinEntities = (List) joinEntityColumn.getValue();
 
         if (joinEntities.contains(entity)) {
-            return QUERY_TEMPLATE.formatted(entityTable.getTableName(), getColumnClause(entityTable, parentEntityTable), getValueClause(entityTable, parentEntityTable));
+            return QUERY_TEMPLATE.formatted(entityTable.getTableName(), getColumnClause(entityTable, parentEntityTable),
+                    getValueClause(entityTable, parentEntityTable));
         }
         return QUERY_TEMPLATE.formatted(entityTable.getTableName(), getColumnClause(entityTable), getValueClause(entityTable));
     }
 
     private String getColumnClause(EntityTable entityTable) {
-        final List<String> columnDefinitions = entityTable.getEntityColumns()
+        return entityTable.getEntityColumns()
                 .stream()
                 .filter(this::isAvailable)
                 .map(EntityColumn::getColumnName)
-                .collect(Collectors.toList());
-
-        return String.join(COLUMN_DELIMITER, columnDefinitions);
+                .collect(Collectors.joining(COLUMN_DELIMITER));
     }
 
     private String getValueClause(EntityTable entityTable) {
-        final List<String> values = entityTable.getEntityColumns()
+        return entityTable.getEntityColumns()
                 .stream()
                 .filter(this::isAvailable)
                 .map(EntityColumn::getValueWithQuotes)
-                .collect(Collectors.toList());
-
-        return String.join(COLUMN_DELIMITER, values);
+                .collect(Collectors.joining(COLUMN_DELIMITER));
     }
 
     private String getColumnClause(EntityTable entityTable, EntityTable parentEntityTable) {

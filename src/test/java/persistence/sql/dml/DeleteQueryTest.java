@@ -15,9 +15,9 @@ class DeleteQueryTest {
         final DeleteQuery deleteQuery = new DeleteQuery();
 
         // when
-        final String query = deleteQuery.delete(entity);
+        final String sql = deleteQuery.delete(entity);
 
         // then
-        assertThat(query).isEqualTo("DELETE FROM users WHERE id = 1");
+        assertThat(sql).isEqualTo("DELETE FROM users WHERE id = 1");
     }
 }

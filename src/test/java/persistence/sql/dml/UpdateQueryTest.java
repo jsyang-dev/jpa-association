@@ -17,9 +17,9 @@ class UpdateQueryTest {
         final EntityTable entityTable = new EntityTable(entity);
 
         // when
-        final String query = updateQuery.update(entity, entityTable.getEntityColumns());
+        final String sql = updateQuery.update(entity, entityTable.getEntityColumns());
 
         // then
-        assertThat(query).isEqualTo("UPDATE users SET id = 1, nick_name = 'Jackson', old = 20, email = 'test@email.com' WHERE id = 1");
+        assertThat(sql).isEqualTo("UPDATE users SET id = 1, nick_name = 'Jackson', old = 20, email = 'test@email.com' WHERE id = 1");
     }
 }
