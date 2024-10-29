@@ -24,7 +24,7 @@ class SelectQueryTest {
     }
 
     @Test
-    @DisplayName("연관관계가 존재하는 엔티티의 findAll 쿼리를 생성한다.")
+    @DisplayName("연관관계가 존재하는 엔티티로 findAll 쿼리를 생성한다.")
     void findAll_withAssociation() {
         // given
         final SelectQuery selectQuery = new SelectQuery();
@@ -52,7 +52,7 @@ class SelectQueryTest {
     }
 
     @Test
-    @DisplayName("연관관계가 존재하는 엔티티의 findById 쿼리를 생성한다.")
+    @DisplayName("연관관계가 존재하는 엔티티로 findById 쿼리를 생성한다.")
     void findById_withAssociation() {
         // given
         final SelectQuery selectQuery = new SelectQuery();

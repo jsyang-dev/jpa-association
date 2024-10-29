@@ -6,11 +6,9 @@ import persistence.meta.EntityTable;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class SelectQuery {
-    private static final String COLUMN_DELIMITER = ", ";
-    private static final String COLUMN_ALIAS_DELIMITER = ".";
-    private static final String TABLE_ALIAS_DELIMITER = " ";
+import static persistence.sql.SqlConst.*;
 
+public class SelectQuery {
     public String findAll(Class<?> entityType) {
         final EntityTable entityTable = new EntityTable(entityType);
 
@@ -36,13 +34,13 @@ public class SelectQuery {
     }
 
     private SelectQueryBuilder getAssociationQuery(EntityTable entityTable) {
-        final EntityTable joinEntityTable = new EntityTable(entityTable.getJoinColumnType());
+        final EntityTable joinEntityTable = new EntityTable(entityTable.getForeignTableType());
         return new SelectQueryBuilder()
                 .select(getSelectClause(entityTable, joinEntityTable))
                 .from(getTableWithAliasClause(entityTable))
                 .innerJoin(getTableWithAliasClause(joinEntityTable))
                 .on(
-                        getColumnWithAliasClause(entityTable, entityTable.getJoinColumnName()),
+                        getColumnWithAliasClause(entityTable, entityTable.getForeignColumnName()),
                         getColumnWithAliasClause(joinEntityTable, joinEntityTable.getIdColumnName())
                 );
     }
