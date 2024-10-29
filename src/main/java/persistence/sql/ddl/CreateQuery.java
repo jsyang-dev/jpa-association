@@ -26,13 +26,40 @@ public class CreateQuery {
         return QUERY_TEMPLATE.formatted(entityTable.getTableName(), getColumnClause());
     }
 
+    public String create(Class<?> parentEntityType) {
+        return QUERY_TEMPLATE.formatted(entityTable.getTableName(), getColumnClause(parentEntityType));
+    }
+
     private String getColumnClause() {
         final List<String> columnDefinitions = entityTable.getEntityColumns()
                 .stream()
+                .filter(this::isAvailable)
                 .map(this::getColumnDefinition)
                 .collect(Collectors.toList());
 
         return String.join(", ", columnDefinitions);
+    }
+
+    private Object getColumnClause(Class<?> parentEntityType) {
+        final List<String> columnDefinitions = entityTable.getEntityColumns()
+                .stream()
+                .filter(this::isAvailable)
+                .map(this::getColumnDefinition)
+                .collect(Collectors.toList());
+
+        final EntityTable parentEntityTable = new EntityTable(parentEntityType);
+        if (parentEntityTable.getJoinColumnType() != entityTable.getType()) {
+            throw new IllegalArgumentException();
+        }
+
+        columnDefinitions.add(
+                getForeignColumnDefinition(parentEntityTable.getJoinEntityColumn(), parentEntityTable.getIdEntityColumn()));
+
+        return String.join(", ", columnDefinitions);
+    }
+
+    private boolean isAvailable(EntityColumn entityColumn) {
+        return !entityColumn.isOneToManyAssociation();
     }
 
     private String getColumnDefinition(EntityColumn entityColumn) {
@@ -51,6 +78,10 @@ public class CreateQuery {
         }
 
         return columDefinition;
+    }
+
+    private String getForeignColumnDefinition(EntityColumn parentJoinEntityColumn, EntityColumn parentIdEntityColumn) {
+        return parentJoinEntityColumn.getColumnName() + " " + getDbType(parentIdEntityColumn);
     }
 
     private String getDbType(EntityColumn entityColumn) {

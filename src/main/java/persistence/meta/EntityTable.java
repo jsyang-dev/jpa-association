@@ -27,6 +27,10 @@ public class EntityTable {
         this.entityColumns = new EntityColumns(entity);
     }
 
+    public Class<?> getType() {
+        return type;
+    }
+
     public String getTableName() {
         return tableName.value();
     }
@@ -46,6 +50,10 @@ public class EntityTable {
     @Override
     public int hashCode() {
         return Objects.hash(type, tableName, entityColumns);
+    }
+
+    public EntityColumn getIdEntityColumn() {
+        return entityColumns.getIdEntityColumn();
     }
 
     public String getWhereClause() {
@@ -99,6 +107,10 @@ public class EntityTable {
         return joinEntityColumn.isOneToManyAssociation();
     }
 
+    public EntityColumn getJoinEntityColumn() {
+        return entityColumns.getJoinEntityColumn();
+    }
+
     public Class<?> getJoinColumnType() {
         return getJoinEntityColumn().getJoinColumnType();
     }
@@ -115,13 +127,5 @@ public class EntityTable {
         if (!entityType.isAnnotationPresent(Entity.class)) {
             throw new IllegalArgumentException(NOT_ENTITY_FAILED_MESSAGE);
         }
-    }
-
-    private EntityColumn getIdEntityColumn() {
-        return entityColumns.getIdEntityColumn();
-    }
-
-    private EntityColumn getJoinEntityColumn() {
-        return entityColumns.getJoinEntityColumn();
     }
 }
