@@ -9,7 +9,9 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "orders")
@@ -22,5 +24,46 @@ public class Order {
 
     @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "order_id")
-    private List<OrderItem> orderItems;
+    private List<OrderItem> orderItems = new ArrayList<>();
+
+    public Order() {
+    }
+
+    public Order(String orderNumber) {
+        this.orderNumber = orderNumber;
+    }
+
+    public Order(Long id, String orderNumber) {
+        this.id = id;
+        this.orderNumber = orderNumber;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getOrderNumber() {
+        return orderNumber;
+    }
+
+    public List<OrderItem> getOrderItems() {
+        return orderItems;
+    }
+
+    public void addOrderItem(OrderItem orderItem) {
+        orderItems.add(orderItem);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Order order = (Order) o;
+        return Objects.equals(id, order.id) && Objects.equals(orderNumber, order.orderNumber) && Objects.equals(orderItems, order.orderItems);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, orderNumber, orderItems);
+    }
 }

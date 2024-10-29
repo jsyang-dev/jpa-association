@@ -112,7 +112,11 @@ public class EntityTable {
     }
 
     public Class<?> getJoinColumnType() {
-        return getJoinEntityColumn().getJoinColumnType();
+        final EntityColumn joinEntityColumn = getJoinEntityColumn();
+        if (Objects.isNull(joinEntityColumn)) {
+            return Object.class;
+        }
+        return joinEntityColumn.getJoinColumnType();
     }
 
     public String getJoinColumnName() {

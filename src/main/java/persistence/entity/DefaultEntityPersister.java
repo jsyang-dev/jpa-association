@@ -2,10 +2,10 @@ package persistence.entity;
 
 import jdbc.DefaultIdMapper;
 import jdbc.JdbcTemplate;
+import persistence.meta.EntityColumn;
 import persistence.sql.dml.DeleteQuery;
 import persistence.sql.dml.InsertQuery;
 import persistence.sql.dml.UpdateQuery;
-import persistence.meta.EntityColumn;
 
 import java.util.List;
 
@@ -27,6 +27,12 @@ public class DefaultEntityPersister implements EntityPersister {
     @Override
     public void insert(Object entity) {
         final String sql = insertQuery.insert(entity);
+        jdbcTemplate.executeAndReturnGeneratedKeys(sql, new DefaultIdMapper(entity));
+    }
+
+    @Override
+    public void insert(Object entity, Object parentEntity) {
+        final String sql = insertQuery.insert(entity, parentEntity);
         jdbcTemplate.executeAndReturnGeneratedKeys(sql, new DefaultIdMapper(entity));
     }
 
