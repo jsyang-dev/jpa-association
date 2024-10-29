@@ -36,14 +36,14 @@ public class SelectQuery {
     }
 
     private SelectQueryBuilder getAssociationQuery(EntityTable entityTable) {
-        final EntityTable joinEntityTable = new EntityTable(entityTable.getJoinColumnType());
+        final EntityTable childEntityTable = new EntityTable(entityTable.getJoinColumnType());
         return new SelectQueryBuilder()
-                .select(getSelectClause(entityTable, joinEntityTable))
+                .select(getSelectClause(entityTable, childEntityTable))
                 .from(getTableWithAliasClause(entityTable))
-                .innerJoin(getTableWithAliasClause(joinEntityTable))
+                .innerJoin(getTableWithAliasClause(childEntityTable))
                 .on(
-                        getColumnWithAliasClause(entityTable, entityTable.getJoinColumnName()),
-                        getColumnWithAliasClause(joinEntityTable, joinEntityTable.getIdColumnName())
+                        getColumnWithAliasClause(entityTable, entityTable.getIdColumnName()),
+                        getColumnWithAliasClause(childEntityTable, entityTable.getJoinColumnName())
                 );
     }
 

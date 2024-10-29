@@ -63,7 +63,7 @@ class SelectQueryTest {
         // then
         assertThat(sql).isEqualTo("SELECT _orders.id, _orders.orderNumber, _order_items.id, "
                 + "_order_items.product, _order_items.quantity FROM orders _orders "
-                + "INNER JOIN order_items _order_items ON _orders.order_id = _order_items.id "
+                + "INNER JOIN order_items _order_items ON _orders.id = _order_items.order_id "
                 + "WHERE _orders.id = 1");
     }
 
