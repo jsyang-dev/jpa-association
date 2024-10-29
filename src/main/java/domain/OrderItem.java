@@ -16,4 +16,12 @@ public class OrderItem {
     private String product;
 
     private Integer quantity;
+
+    public OrderItem() {
+    }
+
+    public OrderItem(String product, Integer quantity) {
+        this.product = product;
+        this.quantity = quantity;
+    }
 }

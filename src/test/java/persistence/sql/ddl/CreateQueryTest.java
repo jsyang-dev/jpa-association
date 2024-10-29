@@ -24,13 +24,16 @@ class CreateQueryTest {
         final List<String> sqls = createQuery.create();
 
         // then
-        assertThat(sqls.get(0)).isEqualTo(
-                "CREATE TABLE users (id BIGINT AUTO_INCREMENT PRIMARY KEY, nick_name VARCHAR(20), old INTEGER, email VARCHAR(255) NOT NULL)");
+        assertAll(
+                () -> assertThat(sqls).hasSize(1),
+                () -> assertThat(sqls.get(0)).isEqualTo(
+                "CREATE TABLE users (id BIGINT AUTO_INCREMENT PRIMARY KEY, nick_name VARCHAR(20), old INTEGER, email VARCHAR(255) NOT NULL)")
+        );
     }
 
     @Test
     @DisplayName("연관관계가 존재하는 엔티티로 create 쿼리를 생성한다.")
-    void create_withOneToMany() {
+    void create_withAssociation() {
         // given
         final Dialect dialect = new H2Dialect();
         final CreateQuery createQuery = new CreateQuery(Order.class, dialect);
