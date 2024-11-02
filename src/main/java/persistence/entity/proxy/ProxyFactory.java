@@ -1,4 +1,6 @@
-package persistence.entity;
+package persistence.entity.proxy;
+
+import persistence.entity.EntityLoader;
 
 import java.lang.reflect.Proxy;
 import java.util.List;

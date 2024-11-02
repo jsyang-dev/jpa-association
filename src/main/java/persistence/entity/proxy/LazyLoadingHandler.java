@@ -1,7 +1,8 @@
-package persistence.entity;
+package persistence.entity.proxy;
 
 import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToMany;
+import persistence.entity.EntityLoader;
 import persistence.meta.EntityTable;
 
 import java.lang.reflect.Field;

@@ -1,4 +1,4 @@
-package persistence.entity;
+package persistence.entity.proxy;
 
 import database.H2ConnectionFactory;
 import domain.Order;
@@ -9,6 +9,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.dialect.H2Dialect;
+import persistence.entity.DefaultEntityLoader;
+import persistence.entity.DefaultEntityPersister;
+import persistence.entity.EntityLoader;
+import persistence.entity.EntityPersister;
 import persistence.sql.ddl.CreateQuery;
 import persistence.sql.dml.DeleteQuery;
 import persistence.sql.dml.InsertQuery;
