@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 
-public interface Mapping {
+public interface FieldMapping {
     <T> boolean supports(Class<T> entityType);
 
     <T> T getRow(ResultSet resultSet, Class<T> entityType) throws SQLException, IllegalAccessException;

@@ -6,7 +6,7 @@ import java.lang.reflect.Field;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
-public class SimpleMapping implements Mapping {
+public class SimpleFieldMapping implements FieldMapping {
     @Override
     public <T> boolean supports(Class<T> entityType) {
         return getJoinColumnType(entityType) == Object.class;
