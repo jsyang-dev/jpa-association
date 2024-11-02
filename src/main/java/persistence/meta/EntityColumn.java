@@ -93,4 +93,8 @@ public class EntityColumn {
     public Class<?> getJoinColumnType() {
         return columnOption.getJoinColumnType();
     }
+
+    public boolean isOneToManyAndLazy() {
+        return columnOption.isOneToManyAssociation() && columnOption.getFetchType() == FetchType.LAZY;
+    }
 }

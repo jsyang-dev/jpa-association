@@ -129,6 +129,10 @@ public class EntityTable {
         return getJoinEntityColumn().getColumnName();
     }
 
+    public boolean isSimpleMapping() {
+        return Objects.isNull(getJoinEntityColumn()) || getJoinEntityColumn().isOneToManyAndLazy();
+    }
+
     public String getAlias() {
         return ALIAS_PREFIX + getTableName();
     }

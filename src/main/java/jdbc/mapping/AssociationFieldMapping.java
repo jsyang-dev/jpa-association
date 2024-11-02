@@ -1,6 +1,7 @@
 package jdbc.mapping;
 
 import jdbc.InstanceFactory;
+import persistence.meta.EntityTable;
 
 import java.lang.reflect.Field;
 import java.sql.ResultSet;
@@ -13,7 +14,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class AssociationFieldMapping implements FieldMapping {
     @Override
     public <T> boolean supports(Class<T> entityType) {
-        return getJoinColumnType(entityType) != Object.class;
+        final EntityTable entityTable = new EntityTable(entityType);
+        return !entityTable.isSimpleMapping();
     }
 
     @Override

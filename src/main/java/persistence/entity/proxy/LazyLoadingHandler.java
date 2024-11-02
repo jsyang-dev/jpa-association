@@ -1,8 +1,7 @@
 package persistence.entity.proxy;
 
-import jakarta.persistence.FetchType;
-import jakarta.persistence.OneToMany;
 import persistence.entity.EntityLoader;
+import persistence.meta.EntityColumn;
 import persistence.meta.EntityTable;
 
 import java.lang.reflect.Field;
@@ -49,10 +48,7 @@ public class LazyLoadingHandler<T> implements InvocationHandler {
     }
 
     private boolean isOneToManyAndLazy(Field field) {
-        final OneToMany oneToMany = field.getAnnotation(OneToMany.class);
-        if (Objects.isNull(oneToMany)) {
-            return false;
-        }
-        return oneToMany.fetch() == FetchType.LAZY;
+        final EntityColumn entityColumn = new EntityColumn(field);
+        return entityColumn.isOneToManyAndLazy();
     }
 }
