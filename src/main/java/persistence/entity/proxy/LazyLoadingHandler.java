@@ -13,6 +13,8 @@ import java.util.Objects;
 
 public class LazyLoadingHandler<T> implements InvocationHandler {
     private static final String NO_ONE_TO_ONE_LAZY_FAILED_MESSAGE = "@OneToMany 연관관계이면서 LAZY 타입인 컬럼이 존재하지 않습니다.";
+    private static final String LAZY_LOADING_METHOD_NAME = "get";
+
     private final EntityLoader entityLoader;
     private final Class<T> entityType;
     private final Object parentEntity;
@@ -30,25 +32,30 @@ public class LazyLoadingHandler<T> implements InvocationHandler {
                 .findFirst()
                 .orElseThrow(() -> new IllegalStateException(NO_ONE_TO_ONE_LAZY_FAILED_MESSAGE));
 
-        if (Objects.equals(method.getName(), "get")) {
-            final EntityTable parentEntityTable = new EntityTable(parentEntity);
-
-            final List<T> loadedList = entityLoader.loadCollection(entityType, parentEntityTable.getJoinColumnName(),
-                    parentEntityTable.getIdValue());
-
-            associationField.setAccessible(true);
-            associationField.set(parentEntity, loadedList);
-
+        if (Objects.equals(method.getName(), LAZY_LOADING_METHOD_NAME)) {
+            final List<T> loadedList = lazyLoad(associationField);
             return method.invoke(loadedList, args);
         }
+        return method.invoke(getAssociationFieldValue(associationField), args);
+    }
 
+    private Object getAssociationFieldValue(Field associationField) throws IllegalAccessException {
         associationField.setAccessible(true);
-        final Object associationFieldValue = associationField.get(parentEntity);
-        return method.invoke(associationFieldValue, args);
+        return associationField.get(parentEntity);
     }
 
     private boolean isOneToManyAndLazy(Field field) {
         final EntityColumn entityColumn = new EntityColumn(field);
         return entityColumn.isOneToManyAndLazy();
+    }
+
+    private List<T> lazyLoad(Field associationField) throws IllegalAccessException {
+        final EntityTable parentEntityTable = new EntityTable(parentEntity);
+        final List<T> loadedList = entityLoader.loadCollection(entityType, parentEntityTable.getJoinColumnName(),
+                parentEntityTable.getIdValue());
+
+        associationField.setAccessible(true);
+        associationField.set(parentEntity, loadedList);
+        return loadedList;
     }
 }
