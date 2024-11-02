@@ -12,7 +12,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class AssociationMapping implements Mapping {
     @Override
-    public <T>boolean supports(Class<T> entityType) {
+    public <T> boolean supports(Class<T> entityType) {
         return getJoinColumnType(entityType) != Object.class;
     }
 
