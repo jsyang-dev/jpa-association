@@ -5,15 +5,14 @@ import domain.Order;
 import domain.OrderItem;
 import domain.OrderLazy;
 import jdbc.JdbcTemplate;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import persistence.dialect.H2Dialect;
 import persistence.entity.DefaultEntityLoader;
 import persistence.entity.DefaultEntityPersister;
 import persistence.entity.EntityLoader;
 import persistence.entity.EntityPersister;
-import persistence.sql.ddl.CreateQuery;
 import persistence.sql.dml.DeleteQuery;
 import persistence.sql.dml.InsertQuery;
 import persistence.sql.dml.SelectQuery;
@@ -23,6 +22,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
+import static util.QueryUtils.*;
 
 class ProxyFactoryTest {
     private final JdbcTemplate jdbcTemplate = new JdbcTemplate(H2ConnectionFactory.getConnection());
@@ -45,6 +45,12 @@ class ProxyFactoryTest {
         entityPersister.insert(orderItem2, order);
     }
 
+    @AfterEach
+    void tearDown() {
+        dropTable(OrderLazy.class);
+        dropTable(OrderItem.class);
+    }
+
     @Test
     @DisplayName("프록시 생성 후 컬렉션에 접근하면 lazy 로딩 된다.")
     void createProxyAndLazyLoading() {
@@ -62,15 +68,5 @@ class ProxyFactoryTest {
                 () -> assertThat(proxy).hasSize(2),
                 () -> assertThat(proxy).containsExactly(orderItem1, orderItem2)
         );
-    }
-
-    private void createTable(Class<?> entityType) {
-        final CreateQuery createQuery = new CreateQuery(entityType, new H2Dialect());
-        jdbcTemplate.execute(createQuery.create());
-    }
-
-    private void createTable(Class<?> entityType, Class<?> parentEntityType) {
-        final CreateQuery createQuery = new CreateQuery(entityType, new H2Dialect());
-        jdbcTemplate.execute(createQuery.create(parentEntityType));
     }
 }
