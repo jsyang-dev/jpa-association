@@ -32,7 +32,7 @@ public class LazyLoadingHandler<T> implements InvocationHandler {
                 .findFirst()
                 .orElseThrow(() -> new IllegalStateException(NO_ONE_TO_ONE_LAZY_FAILED_MESSAGE));
 
-        if (Objects.equals(method.getName(), LAZY_LOADING_METHOD_NAME)) {
+        if (Objects.equals(method.getName(), LAZY_LOADING_METHOD_NAME)) {   // 로드 여부??
             final List<T> loadedList = lazyLoad(associationField);
             return method.invoke(loadedList, args);
         }
